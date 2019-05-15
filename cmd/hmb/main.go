@@ -23,15 +23,24 @@ func main() {
 		return
 	}
 
-	switch os.Args[1] {
-	case "setup":
-		cmdSetup.Parse(os.Args[2:])
-	case "install":
-		cmdInstall.Parse(os.Args[2:])
-	default:
-		log.Fatalf("%q is not a valid command.\n", os.Args[1])
+	if err := run(os.Args[1:]); err != nil {
+		log.Fatalf("hmb: command failed to run, err: %+v.\n", err)
 		os.Exit(1)
 	}
+}
+
+func run(cmdArgs []string) error {
+	switch cmdArgs[1] {
+	case "setup":
+		cmdSetup.Parse(cmdArgs[2:])
+	case "install":
+		cmdInstall.Parse(cmdArgs[2:])
+	default:
+		log.Fatalf("%q is not a valid command.\n", cmdArgs[1])
+		os.Exit(1)
+	}
+
+	return nil
 }
 
 func printUsuage() {
