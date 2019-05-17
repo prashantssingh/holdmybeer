@@ -5,16 +5,18 @@ import (
 	"log"
 	"os"
 
+	"github.com/prashantssingh/holdmybeer/pkg"
+
 	flag "github.com/spf13/pflag"
 )
 
 var (
-	cmdInstall = flag.NewFlagSet("install", flag.ExitOnError)
 	cmdSetup   = flag.NewFlagSet("setup", flag.ExitOnError)
-
-	flagLang = cmdSetup.StringP("lang", "l", "", "Specify a lang to install. For example: go, nodejs, java")
+	cmdInstall = flag.NewFlagSet("install", flag.ExitOnError)
 
 	flagBareMinimum = cmdSetup.StringP("bare-minimum", "b", "", "Setup bare minimum development environment. This will install vim, curl and htop on host machine")
+
+	flagLang = cmdInstall.StringP("lang", "l", "", "Specify a lang to install. For example: go, nodejs, java")
 )
 
 func main() {
@@ -30,14 +32,31 @@ func main() {
 }
 
 func run(cmdArgs []string) error {
+	log.Println("OS args: ", cmdArgs)
 	switch cmdArgs[1] {
 	case "setup":
-		cmdSetup.Parse(cmdArgs[2:])
+		cmdSetup.Parse(cmdArgs[1:])
 	case "install":
-		cmdInstall.Parse(cmdArgs[2:])
+		cmdInstall.Parse(cmdArgs[1:])
 	default:
 		log.Fatalf("%q is not a valid command.\n", cmdArgs[1])
 		os.Exit(1)
+	}
+
+	if cmdSetup.Parsed() {
+		if len(cmdArgs) == 1 || cmdArgs[1] == "-h" || cmdArgs[1] == "--help" {
+			pkg.PrintSetupUsuage()
+			return nil
+		}
+		return nil
+	}
+
+	if cmdInstall.Parsed() {
+		if len(cmdArgs) == 1 || cmdArgs[1] == "-h" || cmdArgs[1] == "--help" {
+			pkg.PrintInstallerUsuage()
+			return nil
+		}
+		return nil
 	}
 
 	return nil
@@ -46,9 +65,9 @@ func run(cmdArgs []string) error {
 func printUsuage() {
 	fmt.Println("Usage: hmb <command> [<args>]")
 	fmt.Println()
-	fmt.Println("An installer to aid you with your setup.")
+	fmt.Println("An installer to aid you with your setup")
 	fmt.Println()
 	fmt.Println("Commands:")
 	fmt.Println("  setup		Setup helps quickly bootstrap an environment")
-	fmt.Println("  install		Intall specified languages, frameworks and tools")
+	fmt.Println("  install		Install specified languages, frameworks and tools")
 }
