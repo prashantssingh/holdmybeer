@@ -32,12 +32,11 @@ func main() {
 }
 
 func run(cmdArgs []string) error {
-	log.Println("OS args: ", cmdArgs)
-	switch cmdArgs[1] {
+	switch cmdArgs[0] {
 	case "setup":
-		cmdSetup.Parse(cmdArgs[1:])
+		cmdSetup.Parse(cmdArgs[0:])
 	case "install":
-		cmdInstall.Parse(cmdArgs[1:])
+		cmdInstall.Parse(cmdArgs[0:])
 	default:
 		log.Fatalf("%q is not a valid command.\n", cmdArgs[1])
 		os.Exit(1)
