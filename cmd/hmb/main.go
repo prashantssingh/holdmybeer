@@ -14,7 +14,7 @@ var (
 	cmdSetup   = flag.NewFlagSet("setup", flag.ExitOnError)
 	cmdInstall = flag.NewFlagSet("install", flag.ExitOnError)
 
-	flagBareMinimum = cmdSetup.StringP("bare-minimum", "b", "", "Setup bare minimum development environment. This will install vim, curl and htop on host machine")
+	flagBareMinimum = cmdSetup.BoolP("bare-minimum", "b", false, "Setup bare minimum development environment. This will install vim, curl and htop on host machine")
 
 	flagLang = cmdInstall.StringP("lang", "l", "", "Specify a lang to install. For example: go, nodejs, java")
 )
@@ -47,6 +47,11 @@ func run(cmdArgs []string) error {
 			pkg.PrintSetupUsuage()
 			return nil
 		}
+
+		switch {
+		case *flagBareMinimum:
+			fmt.Println("setting-up bare minimum dev env.... go get some beer for yourself!")
+		}
 		return nil
 	}
 
@@ -55,7 +60,6 @@ func run(cmdArgs []string) error {
 			pkg.PrintInstallerUsuage()
 			return nil
 		}
-		return nil
 	}
 
 	return nil

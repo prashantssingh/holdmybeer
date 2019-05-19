@@ -2,9 +2,16 @@ package pkg
 
 import "fmt"
 
+const (
+	installCmdCurl = `sudo apt install curl`
+	installCmdVim  = `sudo apt install vim`
+	installCmdHtop = `sudo apt install htop`
+)
+
 // RunSetup install set of predefined tools based on flag provided to hmb while executing the binary
 // on the terminal.
 func RunSetup() error {
+	
 	return nil
 }
 
@@ -18,4 +25,19 @@ func PrintSetupUsuage() {
 	fmt.Println("  -b, --bare-minimum		Installs tools like vim, curl and htop.")
 	fmt.Println("\t\t\t\tUse -i or --ignore flag after this flag to ignore installation of tools you don't need. Refer usuage of -i flag below")
 	fmt.Println("  -i, --ignore		Pass a list of comma-separated names of tools enlisted in -b flag, you don't want hmb to install")
+}
+
+func installCurl() error {
+	if _, err := runCommand("", installCmdCurl); err != nil {
+		return err
+	}
+	return nil
+}
+
+func installHtop() error {
+	return nil
+}
+
+func installVim() error {
+	return nil
 }
