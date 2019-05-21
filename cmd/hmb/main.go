@@ -44,20 +44,24 @@ func run(cmdArgs []string) error {
 
 	if cmdSetup.Parsed() {
 		if len(cmdArgs) == 1 || cmdArgs[1] == "-h" || cmdArgs[1] == "--help" {
-			pkg.PrintSetupUsuage()
+			printSetupUsuage()
 			return nil
 		}
 
 		switch {
 		case *flagBareMinimum:
-			fmt.Println("setting-up bare minimum dev env.... go get some beer for yourself!")
+			if err := pkg.SetupBareMinimum(); err != nil {
+				log.Fatalf("err: %+v\n", err)
+				os.Exit(1)
+			}
+
 		}
 		return nil
 	}
 
 	if cmdInstall.Parsed() {
 		if len(cmdArgs) == 1 || cmdArgs[1] == "-h" || cmdArgs[1] == "--help" {
-			pkg.PrintInstallerUsuage()
+			printInstallerUsuage()
 			return nil
 		}
 	}
@@ -73,4 +77,24 @@ func printUsuage() {
 	fmt.Println("Commands:")
 	fmt.Println("  setup		Setup helps quickly bootstrap an environment")
 	fmt.Println("  install		Install specified languages, frameworks and tools")
+}
+
+func printSetupUsuage() {
+	fmt.Println("Usage: hmb setup [OPTIONS]")
+	fmt.Println()
+	fmt.Println("Setup helps quickly bootstrap an environment")
+	fmt.Println()
+	fmt.Println("Option: ")
+	fmt.Println("  -b, --bare-minimum	Installs tools like vim, curl and htop.")
+	fmt.Println("\t\t\tUse -i or --ignore flag after this flag to ignore installation of tools you don't need. Refer usuage of -i flag below")
+	fmt.Println("  -i, --ignore		Pass a list of comma-separated names of tools enlisted in -b flag to ignore")
+}
+
+func printInstallerUsuage() {
+	fmt.Println("Usage: hmb install [OPTIONS]")
+	fmt.Println()
+	fmt.Println("Install specified languages, frameworks and tools")
+	fmt.Println()
+	fmt.Println("Options: ")
+	fmt.Println("  -l, --lang 		Specify a lang to install (supported languages: go, nodejs, java)")
 }
