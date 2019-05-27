@@ -70,7 +70,7 @@ func run(cmdArgs []string) error {
 			os.Exit(1)
 		}
 
-		if err := pkg.RunInstaller(); err != nil {
+		if err := pkg.RunInstaller(*flagLang); err != nil {
 			log.Fatalf("hmb: %+v\n", err)
 			os.Exit(1)
 		}
@@ -86,7 +86,7 @@ func printUsuage() {
 	fmt.Println()
 	fmt.Println("Commands:")
 	fmt.Println("  setup		Setup helps quickly bootstrap an environment")
-	fmt.Println("  install		Install specified languages, frameworks and tools")
+	fmt.Println("  install	Install specified languages, frameworks and tools")
 }
 
 func printSetupUsuage() {

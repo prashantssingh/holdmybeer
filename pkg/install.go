@@ -12,13 +12,6 @@ const (
 	workDir = "~/hmb"
 )
 
-var (
-	// configurations for installing go
-	goVersion = "1.12.5"
-	goRoot    = "$HOME/hmb/go"
-	goPath    = "$HOME/workspace/go/src"
-)
-
 // RunInstaller installs a language or a framework based on the flag-value provided to hmb while executing
 // the binary on the terminal.
 func RunInstaller(langStr string) error {
@@ -31,7 +24,11 @@ func RunInstaller(langStr string) error {
 	}
 
 	switch lang {
-	case "go":
+	case "go", "golang":
+		if err := installGo(version); err != nil {
+			return fmt.Errorf("install: failed to install go, err: %+v", err)
+		}
+	case "node", "nodejs":
 		if err := installGo(version); err != nil {
 			return fmt.Errorf("install: failed to install go, err: %+v", err)
 		}
@@ -42,6 +39,13 @@ func RunInstaller(langStr string) error {
 }
 
 func installGo(version string) error {
+	// configurations for installing go
+	var (
+		goVersion = "1.12.5"
+		goRoot    = "$HOME/hmb/go"
+		goPath    = "$HOME/workspace/go/src"
+	)
+
 	if version != "" {
 		goVersion = version
 	}
@@ -81,5 +85,34 @@ func installGo(version string) error {
 	fmt.Println(" done")
 
 	fmt.Println("\n Go installation was successful. Run 'go version' to check version installed and run 'go env' to check go-specific environment")
+	return nil
+}
+
+func installNode(version string) error {
+	// configurations for installing node
+	var (
+		nodeVersion = "10.x"
+	)
+
+	if version != "" {
+		nodeVersion = fmt.Sprintf("%s.x", version)
+	}
+
+	nodeRepo := fmt.Sprintf("node_%s", nodeVersion)
+	cmdReadDistro := "lsb_release -s -c"
+
+	var out []byte
+	var err error
+	if out, err = runCommand("", cmdReadDistro); err != nil {
+		return fmt.Errorf("setup: command failed with err: %+v", err)
+	}
+	distro := strings.Trim(string(out), "\n")
+
+	// echo "deb https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+	// echo "deb-src https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+
+	cmdAddNodeSourceRepo := nodeRepo + distro
+	fmt.Println(cmdAddNodeSourceRepo)
+
 	return nil
 }
