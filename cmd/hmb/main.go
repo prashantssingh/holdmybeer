@@ -80,7 +80,7 @@ func run(cmdArgs []string) error {
 }
 
 func printUsuage() {
-	fmt.Println("Usage: hmb <command> [<args>]")
+	fmt.Println("Usage: hmb <COMMAND> [OPTIONS]")
 	fmt.Println()
 	fmt.Println("An installer to aid you with your setup")
 	fmt.Println()

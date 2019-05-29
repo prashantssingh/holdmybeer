@@ -84,7 +84,7 @@ func installGo(version string) error {
 	_, _ = runCommand("", "source $HOME/.profile")
 	fmt.Println(" done")
 
-	fmt.Println("\n Go installation was successful. Run 'go version' to check version installed and run 'go env' to check go-specific environment")
+	fmt.Println("\n Go installation was successful. Run 'go version' to check version installed or run 'go env' to check go-specific environment")
 	return nil
 }
 
@@ -98,21 +98,39 @@ func installNode(version string) error {
 		nodeVersion = fmt.Sprintf("%s.x", version)
 	}
 
+	// From Node's official NodeSource Github Page:
+	// Replace with the branch of Node.js or io.js you want to install: node_6.x, node_8.x, node_10.x setc...
+	// VERSION=node_10.x
+
+	// DISTRO="$(lsb_release -s -c)"
+	// echo "deb https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+	// echo "deb-src https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+	//
+	// Replicating above steps...
 	nodeRepo := fmt.Sprintf("node_%s", nodeVersion)
 	cmdReadDistro := "lsb_release -s -c"
 
 	var out []byte
 	var err error
+	fmt.Print(" >>>>>  reading host's distro... ")
 	if out, err = runCommand("", cmdReadDistro); err != nil {
 		return fmt.Errorf("setup: command failed with err: %+v", err)
 	}
 	distro := strings.Trim(string(out), "\n")
 
-	// echo "deb https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
-	// echo "deb-src https://deb.nodesource.com/$VERSION $DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
-
-	cmdAddNodeSourceRepo := nodeRepo + distro
+	cmdAddNodeSourceRepo := fmt.Sprintf("echo \"deb https://deb.nodesource.com/%s %s main\" | sudo tee /etc/apt/sources.list.d/nodesource.list && echo \"deb-src https://deb.nodesource.com/%s %s main\" | sudo tee -a /etc/apt/sources.list.d/nodesource.list", nodeRepo, distro, nodeRepo, distro)
 	fmt.Println(cmdAddNodeSourceRepo)
+
+	fmt.Print(" >>>>>  adding node's source to apt... ")
+	if _, err = runCommand("", cmdAddNodeSourceRepo); err != nil {
+		return fmt.Errorf("setup: command failed with err: %+v", err)
+	}
+
+	fmt.Print(" >>>>>  installing node... ")
+	cmdInstallNode := "sudo apt-get update && sudo apt-get install nodejs"
+	if _, err = runCommand("", cmdInstallNode); err != nil {
+		return fmt.Errorf("setup: command failed with err: %+v", err)
+	}
 
 	return nil
 }
