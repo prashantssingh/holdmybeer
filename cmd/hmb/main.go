@@ -51,7 +51,7 @@ func run(cmdArgs []string) error {
 		switch {
 		case *flagBareMinimum:
 			if err := pkg.SetupBareMinimum(); err != nil {
-				log.Fatalf("err: %+v\n", err)
+				log.Fatalf("hmb: %+v\n", err)
 				os.Exit(1)
 			}
 
@@ -64,13 +64,23 @@ func run(cmdArgs []string) error {
 			printInstallerUsuage()
 			return nil
 		}
+
+		if *flagLang == "" {
+			log.Fatalf("hmb: lang is required\n")
+			os.Exit(1)
+		}
+
+		if err := pkg.RunInstaller(*flagLang); err != nil {
+			log.Fatalf("hmb: %+v\n", err)
+			os.Exit(1)
+		}
 	}
 
 	return nil
 }
 
 func printUsuage() {
-	fmt.Println("Usage: hmb <command> [<args>]")
+	fmt.Println("Usage: hmb <COMMAND> [OPTIONS]")
 	fmt.Println()
 	fmt.Println("An installer to aid you with your setup")
 	fmt.Println()
