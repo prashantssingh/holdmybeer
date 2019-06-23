@@ -76,7 +76,7 @@ func printUsuage() {
 	fmt.Println()
 	fmt.Println("Commands:")
 	fmt.Println("  setup		Setup helps quickly bootstrap an environment")
-	fmt.Println("  install		Install specified languages, frameworks and tools")
+	fmt.Println("  install	Install specified languages, frameworks and tools")
 }
 
 func printSetupUsuage() {
