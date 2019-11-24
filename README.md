@@ -2,7 +2,7 @@
 `hmb`, for short, is your buddy to ease your environment-setup phase. 
 
 ## Usage
-`hmb` has two subcommands - `setup` and `install`
+`hmb` has two sub-commands: `setup` and `install`
 
 Subcommand: `setup`, can be used to development tools. Currently, it only supports flag: `--bare-minimum` (or `-b` for shorthand) to install tools like `vim, curl and htop`
 
