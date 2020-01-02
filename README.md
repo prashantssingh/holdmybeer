@@ -6,7 +6,7 @@
 
 Subcommand: `setup`, can be used to development tools. Currently, it only supports flag: `--bare-minimum` (or `-b` for shorthand) to install tools like `vim, curl and htop`
 
-Subcommand: `setup`, can be used to install languages. Currently, only go and node installation is supported by `hmb`, with `java` support in the pipeline
+Subcommand: `install`, can be used to install languages. Currently, only go and node installation is supported by `hmb`, with `java` support in the pipeline
 
 To install go, simply run:   
 `hmb install lang=go`
